@@ -103,12 +103,16 @@ std::string normalizedBase32String(const std::string & unnorm)
 	return ret;
 }
 
-int main(void)
+int main(int argc, char ** argv)
 {
 	// read the key
 	std::string key;
 
-	if (isatty(fileno(stdin)))
+	if(argc == 2)
+	{
+		key = argv[1];
+	}
+	else if (isatty(fileno(stdin)))
 	{
 		pwfromtty(&key, "Key: ", stdin);
 	}
@@ -124,7 +128,7 @@ int main(void)
 	while (1)
 	{
 		uint32_t p = totp(qui, time(NULL), 0, 30, 6);
-		printf("%06u (%2us remain)\r", p, 30 - (time(NULL) % 30));
+		printf("\r%06u (%2lds remain)", p, 30 - (time(NULL) % 30));
 		fflush(stdout);
 		sleep(1);
 	}
